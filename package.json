@@ -1,0 +1,12 @@
+{
+  "name": "kompan-site",
+  "version": "1.0.0",
+  "description": "Komunitas Padhang Jingglang — static site",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "check": "node scripts/check-links.js",
+    "serve": "python3 -m http.server 8080"
+  },
+  "keywords": ["komunitas", "padhang", "jingglang", "static"],
+  "license": "MIT"
+}

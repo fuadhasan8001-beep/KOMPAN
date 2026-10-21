@@ -1,0 +1,16 @@
+.env
+.env.development
+.env.production
+.env.local
+
+# Secret tokens (should never be in repo)
+*.secret
+*.token
+tokens/
+
+# Dependency directories
+node_modules/
+
+# Build output
+build/
+dist/
