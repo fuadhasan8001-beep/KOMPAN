@@ -12,9 +12,9 @@ Situs statis multi-halaman berbahasa Indonesia, dibangun tanpa backend atau data
 - `kebijakan-privasi.html` — Kebijakan Privasi
 - `404.html` — Halaman Tidak Ditemukan
 - `kegiatan/index.html` + `kegiatan/{slug}/index.html` — Daftar & Detail Kegiatan
-- `berita/index.html` + `berita/{slug}/index.html` — Daftar & Detail Berita
+- `artikel/index.html` + `artikel/{slug}/index.html` — Daftar & Detail Artikel
 
-Konten berita & kegiatan berasal dari Markdown (`content/`). Proses build (`node scripts/build.js`) menghasilkan halaman daftar dan detail, mengecualikan draft, memvalidasi slug unik, dan membuat URL relatif agar situs berfungsi baik pada domain custom maupun URL repository GitHub Pages.
+Konten artikel & kegiatan berasal dari Markdown (`content/`). Proses build (`node scripts/build.js`) menghasilkan halaman daftar dan detail, mengecualikan draft, memvalidasi slug unik, dan membuat URL relatif agar situs berfungsi baik pada domain custom maupun URL repository GitHub Pages.
 
 ## Menjalankan secara lokal
 
@@ -36,7 +36,7 @@ npm run check
 
 ## Deploy ke GitHub Pages
 
-1. Pastikan cabang `main` sudah memiliki semua hasil build (`index.html`, `kegiatan/`, `berita/`, dll.).
+1. Pastikan cabang `main` sudah memiliki semua hasil build (`index.html`, `kegiatan/`, `artikel/`, dll.).
 2. GitHub Actions (`.github/workflows/deploy.yml`) akan membangun dan mempublikasikan secara otomatis saat `main` diperbarui.
 3. Jika menggunakan domain custom, pastikan file `CNAME` berisi nama domain (`kompan.or.id`) dan pengaturan Pages di repo sudah menyorot domain tersebut.
 4. HTTPS akan aktif secara otomatis oleh GitHub Pages.

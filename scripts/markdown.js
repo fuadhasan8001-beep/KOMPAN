@@ -1,5 +1,5 @@
 /**
- * Parser Markdown minimal tapi lengkap untuk konten berita & kegiatan.
+ * Parser Markdown minimal tapi lengkap untuk konten artikel & kegiatan.
  *
  * Tidak bergantung pada package eksternal (tidak perlu npm install),
  * sehingga build bisa dijalankan di GitHub Actions tanpa cache tambahan.

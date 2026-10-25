@@ -47,7 +47,7 @@ const nav = [
   { key: "beranda", label: "Beranda", href: "index.html" },
   { key: "tentang", label: "Tentang Kami", href: "tentang.html" },
   { key: "kegiatan", label: "Kegiatan", href: "kegiatan/" },
-  { key: "berita", label: "Berita", href: "berita/" },
+  { key: "artikel", label: "Artikel", href: "artikel/" },
   { key: "galeri", label: "Galeri", href: "galeri.html" },
   { key: "kontak", label: "Kontak", href: "kontak.html" },
 ];
@@ -57,7 +57,7 @@ const footerNav = [
   { label: "Tentang Kami", href: "tentang.html" },
   { label: "Struktur Organisasi", href: "organisasi.html" },
   { label: "Daftar Kegiatan", href: "kegiatan/" },
-  { label: "Daftar Berita", href: "berita/" },
+  { label: "Artikel", href: "artikel/" },
   { label: "Galeri Dokumentasi", href: "galeri.html" },
   { label: "Kebijakan Privasi", href: "kebijakan-privasi.html" },
   { label: "Kontak", href: "kontak.html" },
@@ -76,7 +76,7 @@ const contact = {
 /** Pengaturan pagination untuk halaman daftar. */
 const pagination = {
   kegiatan: 3,
-  berita: 3,
+  artikel: 3,
 };
 
 module.exports = { site, social, nav, footerNav, contact, pagination };

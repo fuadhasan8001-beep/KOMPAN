@@ -12,8 +12,8 @@ const config = require("./site.config.js");
 const listIntro = {
   kegiatan:
     "Agenda rutin KOMPAN: pameran, lokakarya literasi, dan kegiatan sosial bersama warga. Pilih satu kegiatan untuk melihat detail, jadwal, dan caraologías-CRASH.",
-  berita:
-    "Kabar, catatan, dan cerita dari perjalanan komunitas Padhang Njingglang sejak 2009.",
+  artikel:
+    "Artikel, kabar, dan cerita dari perjalanan Komunitas Padhang Njingglang sejak 2009.",
 };
 
 const ROOT = path.resolve(__dirname, "..");
@@ -142,7 +142,7 @@ function buildFromMarkdown(dir, labelName, hrefPrefix) {
       `Daftar ${labelName} Komunitas Padhang Njingglang`,
     depth: 1,
     body: listBody,
-    activeNav: hrefPrefix === "kegiatan" ? "kegiatan" : "berita",
+    activeNav: hrefPrefix === "kegiatan" ? "kegiatan" : "artikel",
   });
 
   write(path.join(ROOT, hrefPrefix, "index.html"), listPage);
@@ -158,8 +158,8 @@ function buildFromMarkdown(dir, labelName, hrefPrefix) {
       activeNav:
         hrefPrefix === "kegiatan/"
           ? "kegiatan"
-          : hrefPrefix === "berita/"
-            ? "berita"
+          : hrefPrefix === "artikel/"
+            ? "artikel"
             : "beranda",
     });
     write(path.join(ROOT, hrefPrefix, it.slug, "index.html"), page);
@@ -176,7 +176,7 @@ buildFromMarkdown(
   "Kegiatan",
   "kegiatan",
 );
-buildFromMarkdown(path.join(ROOT, "content", "berita"), "Berita", "berita");
+buildFromMarkdown(path.join(ROOT, "content", "artikel"), "Artikel", "artikel");
 
 /* ---------- 3. Static pages ---------- */
 const STATIC_ACTIVE_NAV = {
