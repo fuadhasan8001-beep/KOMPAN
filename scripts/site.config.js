@@ -1,5 +1,5 @@
 /**
- * Konfigurasi global situs KOMPAN – Komunitas Padhang Jingglang.
+ * Konfigurasi global situs KOMPAN – Komunitas Padhang Njingglang.
  *
  * File ini adalah SATU-SATUNYA sumber kebenaran untuk:
  *  - identitas situs (nama, deskripsi, domain),
@@ -12,11 +12,11 @@
 
 const site = {
   name: "KOMPAN",
-  fullName: "Komunitas Padhang Jingglang",
+  fullName: "Komunitas Padhang Njingglang",
   tagline:
-    "Ruang belajar alternatif, seni rupa, literasi dan kebahagiaan anak-anak Nusantara sejak 2009.",
+    "Belajar, bermain, bersholawat, menggambar, bercerita, dan berkreasi — menggambar kebahagiaan anak-anak Indonesia sejak 2009.",
   description:
-    "KOMPAN – Komunitas Padhang Jingglang, ruang belajar alternatif, seni rupa, literasi dan kebahagiaan anak-anak Nusantara sejak 2009.",
+    "KOMPAN (Komunitas Padhang Njingglang) didirikan Anang Prasetyo pada 2009. Belajar, bermain, bersholawat, menggambar, bercerita, dan berkreasi — menggambar kebahagiaan anak-anak Indonesia.",
   locale: "id_ID",
   lang: "id",
   // Domain custom. Kosongkan bila hanya dipakai pada URL repository GitHub Pages.
@@ -28,12 +28,12 @@ const site = {
 /**
  * Tautan eksternal.
  *
- * PENTING: `instagram` masih berupa placeholder. Akun resmi Padhang Jingglang
+ * PENTING: `instagram` masih berupa placeholder. Akun resmi Padhang Njingglang
  * belum dikonfirmasi, jadi jangan dianggap sudah benar sebelum dikonfirmasi
  * lewat dashboard Fouita / hackedown. Ubah hanya di satu tempat ini.
  */
 const social = {
-  instagram: "https://instagram.com/", // TODO(konfirmasi): ganti dengan handle resmi Padhang Jingglang
+  instagram: "https://instagram.com/", // TODO(konfirmasi): ganti dengan handle resmi Padhang Njingglang
   email: "kontak@kompan.org",
   whatsapp: "https://wa.me/6285855216681",
 };
@@ -67,9 +67,10 @@ const footerNav = [
 const contact = {
   email: social.email,
   whatsapp: social.whatsapp,
-  address: "Sanggar Padhang Jingglang, Yogyakarta, Jawa Timur, Indonesia",
+  address:
+    "Wilayah kegiatan: Tulungagung, Yogyakarta, Tuban, Batu, Kediri, dan Blitar",
   hours: "Senin–Sabtu, 09.00–16.00 WIB (dengan janji temu)",
-  mapsQuery: "Padhang Jingglang, Yogyakarta",
+  mapsQuery: "Padhang Njingglang, Yogyakarta",
 };
 
 /** Pengaturan pagination untuk halaman daftar. */

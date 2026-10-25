@@ -10,7 +10,7 @@ status: published
 tags: Literasi, Dongeng, Lokakarya
 ---
 
-Setiap akhir pekan, sanggar Padhang Jingglang dibuka untuk anak-anak yang ingin
+Setiap akhir pekan, sanggar Padhang Njingglang dibuka untuk anak-anak yang ingin
 bercerita tanpa harus dinilai. Sesi berjalan pukul 15.00-17.00 WIB dan gratis.
 
 ## Alur sesi

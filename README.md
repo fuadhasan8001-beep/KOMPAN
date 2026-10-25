@@ -1,4 +1,4 @@
-# KOMPAN — Komunitas Padhang Jingglang
+# KOMPAN — Komunitas Padhang Njingglang
 
 Situs statis multi-halaman berbahasa Indonesia, dibangun tanpa backend atau database.
 

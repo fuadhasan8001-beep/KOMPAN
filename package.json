@@ -1,7 +1,7 @@
 {
   "name": "kompan-site",
   "version": "1.0.0",
-  "description": "Komunitas Padhang Jingglang — static site",
+  "description": "Komunitas Padhang Njingglang — static site",
   "scripts": {
     "build": "node scripts/build.js",
     "check": "node scripts/check-links.js",
