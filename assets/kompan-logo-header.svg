@@ -1,0 +1,93 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 420 142"
+  role="img"
+  aria-labelledby="title desc"
+>
+  <title id="title">KOMPAN — Komunitas Padhang Jingglang</title>
+  <desc id="desc">
+    Logo KOMPAN dengan matahari sebagai huruf O dan tulisan Profil Tentang Kami.
+  </desc>
+  <defs>
+    <radialGradient
+      id="sun"
+      cx="42%"
+      cy="35%"
+      r="65%"
+    >
+      <stop
+        offset="0"
+        stop-color="#fff52a"
+      />
+      <stop
+        offset=".58"
+        stop-color="#ffd600"
+      />
+      <stop
+        offset="1"
+        stop-color="#f28b00"
+      />
+    </radialGradient>
+  </defs>
+  <text
+    x="210"
+    y="29"
+    text-anchor="middle"
+    fill="#bd4545"
+    font-family="'Comic Sans MS', cursive"
+    font-size="26"
+    font-style="italic"
+    letter-spacing="2"
+  >
+    Profil Tentang Kami
+  </text>
+  <text
+    x="5"
+    y="102"
+    fill="#090606"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="99"
+    font-weight="900"
+    letter-spacing="-5"
+  >
+    K
+  </text>
+  <g transform="translate(112 68)">
+    <path
+      d="M0-47 7-59 12-45 22-56 24-41 38-48 35-33 51-35 43-22 59-18 47-8 61 1 46 8 56 22 40 23 44 39 29 35 25 51 13 41 5 56-2 41-14 50-17 34-33 38-29 22-45 20-35 7-51 0-36-9-47-20-31-22-34-37-19-33-11-48-2-35Z"
+      fill="#f4a600"
+    />
+    <circle
+      r="37"
+      fill="url(#sun)"
+    />
+    <circle
+      r="28"
+      fill="#ffd900"
+      opacity=".34"
+    />
+  </g>
+  <text
+    x="151"
+    y="102"
+    fill="#090606"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="94"
+    font-weight="900"
+    letter-spacing="-5"
+  >
+    MPAN
+  </text>
+  <text
+    x="210"
+    y="133"
+    text-anchor="middle"
+    fill="#111"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="25"
+    font-weight="700"
+    letter-spacing=".2"
+  >
+    Komunitas Padhang Jingglang
+  </text>
+</svg>
