@@ -521,7 +521,7 @@ class LocalHandler(SimpleHTTPRequestHandler):
                 if not old:
                     raise ValueError("Artikel tidak ditemukan.")
                 old_image = old["image"]
-                excerpt = re.sub(r"\\s+", " ", content)[:220]
+                excerpt = re.sub(r"\s+", " ", content)[:220]
                 image_clause = ", image=:image" if new_image else ""
                 db.execute(
                     f"UPDATE articles SET title=:title,excerpt=:excerpt,content=:content,category=:category{image_clause} WHERE id=:id AND source='admin'",
