@@ -1,6 +1,6 @@
 # KOMPAN — Komunitas Padhang Njingglang
 
-Situs statis multi-halaman berbahasa Indonesia, dibangun tanpa backend atau database.
+Situs multi-halaman berbahasa Indonesia. Halaman publik tetap statis; Supabase menyediakan login admin, database artikel, dan penyimpanan gambar.
 
 ## Struktur halaman
 
@@ -40,6 +40,26 @@ npm run check
 2. GitHub Actions (`.github/workflows/deploy.yml`) akan membangun dan mempublikasikan secara otomatis saat `main` diperbarui.
 3. Jika menggunakan domain custom, pastikan file `CNAME` berisi nama domain (`kompan.or.id`) dan pengaturan Pages di repo sudah menyorot domain tersebut.
 4. HTTPS akan aktif secara otomatis oleh GitHub Pages.
+
+### Feed Facebook Anang (otomatis)
+
+Beranda dan halaman Galeri menampilkan hingga enam postingan terbaru dari profil Anang. Workflow GitHub Actions memperbarui feed setiap enam jam dan saat workflow dijalankan manual. Karena situs memakai GitHub Pages yang statis, proses pengambilan postingan berjalan di GitHub Actions; token Facebook tidak dikirim ke browser pengunjung.
+
+Untuk mengaktifkannya, buat aplikasi Meta, minta izin `user_posts` melalui Facebook Login, lalu tambahkan token akses milik akun Anang sebagai repository secret bernama `FACEBOOK_USER_ACCESS_TOKEN` di **Settings → Secrets and variables → Actions**. Token harus memiliki izin untuk membaca postingan profil tersebut. Meta dapat meminta App Review untuk izin ini; jadwal feed akan berhenti memperbarui jika token kedaluwarsa atau izin dicabut. Jangan menaruh token di file situs atau mengirimkannya di chat.
+
+Setelah secret tersedia, jalankan workflow **Build & Deploy KOMPAN** satu kali dari tab **Actions** untuk mengisi postingan pertama. Berikutnya feed diperbarui otomatis tiap enam jam.
+
+### Dashboard Admin Artikel
+
+Dashboard tersedia di `/admin/`. Admin dapat masuk, mengunggah gambar JPG/PNG/WebP hingga 5 MB, menulis judul dan isi artikel, lalu menerbitkannya. Artikel terbit langsung muncul di bagian artikel terbaru pada Beranda dan halaman `/artikel/`, serta memiliki halaman baca sendiri.
+
+Sebelum digunakan:
+
+1. Jalankan `supabase/admin-dashboard.sql` satu kali pada **Supabase Dashboard → SQL Editor**. SQL ini mengaktifkan role `admin`, kebijakan RLS, tabel artikel, dan bucket gambar. Di dalamnya, UID admin yang sudah ada di konfigurasi lokal dipromosikan menjadi admin; ubah UID tersebut jika akun admin yang dipakai berbeda.
+2. Tambahkan publishable/anon key Supabase sebagai repository secret `SUPABASE_ANON_KEY` pada **Settings → Secrets and variables → Actions**, lalu jalankan workflow **Build & Deploy KOMPAN**. Kunci ini memang dipakai di browser; akses tulis dibatasi oleh role admin dan RLS. Jangan gunakan `service_role` key.
+3. Masuk di `/admin/` memakai akun admin Supabase yang sudah dibuat. Pengguna tanpa role `admin` tidak dapat menerbitkan artikel atau mengunggah gambar.
+
+File `supabase/.env` tidak ikut dikirim ke GitHub Pages; workflow mengecualikan folder konfigurasi Supabase dan semua file `.env` dari artefak publikasi.
 
 ## Catatan penting
 

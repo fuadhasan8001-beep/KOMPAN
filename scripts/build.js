@@ -95,6 +95,15 @@ function buildFromMarkdown(dir, labelName, hrefPrefix) {
     )
     .join("\n");
 
+  const liveArticleSection =
+    hrefPrefix === "artikel"
+      ? `<section id="live-articles-section" data-live-articles-section class="mt-space-xl" hidden><h2 class="font-headline-md text-headline-md text-on-surface mb-space-md">Artikel terbaru dari KOMPAN</h2><div id="live-article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md"></div></section>`
+      : "";
+  const articleScripts =
+    hrefPrefix === "artikel"
+      ? `<script src="../assets/js/supabase-config.js" defer></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script><script src="../assets/js/articles-live.js" defer></script>`
+      : "";
+
   // Tombol filter kategori (hanya kategori yang benar-benar ada)
   const cats = Array.from(new Set(items.map((it) => it.category || labelName)));
   const catButtons = [
@@ -130,6 +139,8 @@ function buildFromMarkdown(dir, labelName, hrefPrefix) {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md">${listHtml}</div>
     </div>
 
+    ${liveArticleSection}
+
     <p id="search-empty" class="hidden text-center font-body-md text-body-md text-on-surface-variant py-space-xl">Tidak ada ${labelName.toLowerCase()} yang cocok dengan pencarian atau filter ini. <button type="button" id="reset-filters" class="underline font-bold text-primary">Reset pencarian</button></p>
 
     <nav id="pagination" class="flex items-center justify-center gap-2 mt-space-xl" aria-label="Paginasi ${labelName}"></nav>
@@ -143,9 +154,23 @@ function buildFromMarkdown(dir, labelName, hrefPrefix) {
     depth: 1,
     body: listBody,
     activeNav: hrefPrefix === "kegiatan" ? "kegiatan" : "artikel",
+    extraScripts: articleScripts,
   });
 
   write(path.join(ROOT, hrefPrefix, "index.html"), listPage);
+
+  if (hrefPrefix === "artikel") {
+    const liveDetailBody = `<section class="w-full bg-surface py-space-xl lg:py-24"><div class="max-w-4xl mx-auto px-margin-mobile md:px-margin"><div id="live-article-detail" class="text-on-surface-variant" aria-live="polite">Memuat artikel…</div></div></section>`;
+    const liveDetailPage = renderPage({
+      title: "Artikel — KOMPAN",
+      description: "Artikel terbaru Komunitas Padhang Njingglang.",
+      depth: 1,
+      body: liveDetailBody,
+      activeNav: "artikel",
+      extraScripts: `<script src="../assets/js/supabase-config.js" defer></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script><script src="../assets/js/article-detail.js" defer></script>`,
+    });
+    write(path.join(ROOT, "artikel", "baca.html"), liveDetailPage);
+  }
 
   // Detail pages
   items.forEach((it) => {
@@ -253,7 +278,7 @@ makeStaticPage(
   "galeri",
   "Galeri Dokumentasi — KOMPAN",
   0,
-  `<section class="w-full bg-surface py-space-xl lg:py-24" id="galeri"><div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin"><h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Goresan &amp; Momen Ceria</h2><p class="font-body-md text-body-md text-on-surface-variant mt-space-xs max-w-xl">Kumpulan momen autentik, tawa murni, dan ekspresi warna-warni yang terekam dalam setiap helatan Komunitas Padhang Njingglang.</p><div id="gallery-filters" class="flex flex-wrap gap-space-xs mb-space-lg" role="group" aria-label="Filter kategori"><button onclick="filterGallery('all',this)" class="gallery-tab bg-primary-container text-on-primary font-label-md text-label-md px-4 py-1.5 rounded-full" aria-pressed="true">Semua</button><button onclick="filterGallery('pameran',this)" class="gallery-tab bg-surface-container text-on-surface-variant font-label-md text-label-md px-4 py-1.5 rounded-full" aria-pressed="false">Pameran</button><button onclick="filterGallery('lokakarya',this)" class="gallery-tab bg-surface-container text-on-surface-variant font-label-md text-label-md px-4 py-1.5 rounded-full" aria-pressed="false">Lokakarya</button><button onclick="filterGallery('sosial',this)" class="gallery-tab bg-surface-container text-on-surface-variant font-label-md text-label-md px-4 py-1.5 rounded-full" aria-pressed="false">Sosial</button></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-md"><button onclick="openLightbox('https://lh3.googleusercontent.com/aida-public/AB6AXuCY-Bw5_XLivatFhq7TXIMhUSpayNeRSMRh-gU-CitE05kVSWvf0Mllh645ribUfH9G0GTYZPofSuG0sLqoVo9tfctBD9E-8Oh6NKQKx5eN6mT3snnHtSGh3IVuCgMxKKdiYMW7omrMqboPqgtLm1HUtSu3UFz2OOU5qYvug7Adloq-IhXMAZv6MCIdq-p3T5158l3jKhmBuoLG-HQqlh0qt7PyF86E43mLqo4PmLIqRRx-DXQAQJSP','Pameran ART FEST','Pameran','Karya murni anak dalam pameran seni rupa tahunan.')" class="gallery-item block relative w-full rounded-xl overflow-hidden shadow-sm group" data-category="pameran"><img class="w-full h-72 object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCY-Bw5_XLivatFhq7TXIMhUSpayNeRSMRh-gU-CitE05kVSWvf0Mllh645ribUfH9G0GTYZPofSuG0sLqoVo9tfctBD9E-8Oh6NKQKx5eN6mT3snnHtSGh3IVuCgMxKKdiYMW7omrMqboPqgtLm1HUtSu3UFz2OOU5qYvug7Adloq-IhXMAZv6MCIdq-p3T5158l3jKhmBuoLG-HQqlh0qt7PyF86E43mLqo4PmLIqRRx-DXQAQJSP" alt="Pameran ART FEST" loading="lazy"/><div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div><span class="absolute bottom-3 left-3 text-white font-label-md">Pameran ART FEST</span></button><button onclick="openLightbox('https://lh3.googleusercontent.com/aida-public/AB6AXuB8waW2N3HKGtrMzYe5cGPHB11lZlUJqa7KkvlYOw71qzznOex2iNkdHGKQ0GZJgwSZu90GLvPNIMiLG2eTHFBnSE1wyoVdkayrKwPh_oK2Zf4OeGUTjkwn5Dg3xKR5LVEcacFY9_OKo7jMsWMw5Y6Q_R0bBRFi8bEGuQYIpRsJJW9jYc5j29v8vTxQrv_xt_l9L-EhYKfe0_2GRvqWscWm8xgfBa6OiUvqODQdBCPuwLb5o7y2u74D','Revitalisasi Ruang Main','Sosial','Ruang bermain diperbaiki bersama warga.')" class="gallery-item block relative w-full rounded-xl overflow-hidden shadow-sm group" data-category="sosial"><img class="w-full h-72 object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8waW2N3HKGtrMzYe5cGPHB11lZlUJqa7KkvlYOw71qzznOex2iNkdHGKQ0GZJgwSZu90GLvPNIMiLG2eTHFBnSE1wyoVdkayrKwPh_oK2Zf4OeGUTjkwn5Dg3xKR5LVEcacFY9_OKo7jMsWMw5Y6Q_R0bBRFi8bEGuQYIpRsJJW9jYc5j29v8vTxQrv_xt_l9L-EhYKfe0_2GRvqWscWm8xgfBa6OiUvqODQdBCPuwLb5o7y2u74D" alt="Revitalisasi Ruang Main" loading="lazy"/><div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div><span class="absolute bottom-3 left-3 text-white font-label-md">Revitalisasi Ruang Main</span></button><button onclick="openLightbox('https://lh3.googleusercontent.com/aida-public/AB6AXuCto_B097-1x-yi9I3LQMYtmNo4VTs8YHUPKPMtHhCe7XGY7fhetEY7LJo_4F30WwWPat2233t8S-t4xW-sho0_lD3yZyyZd7aKIHsWLaf_26q8W4a5J_f-zgt-6RQq8qV7dRt9cSXvjW3LSkBreZceVnyUb7V_RVgKZEDk_rKHBWqvXGe3i9F3MOt2nLk9l4W0A8N3nykI3jK2A9wQj9MP-6ayNRRxBK3n9ggeut4rnp_EeyXSPcOmS6MjQme09ZXhpRLCla3WeRS9lXlwY6PARiliFwepEpdBkOspoqYAjlijFnn-vsNOh5-A4PHeHdleSgxIt2BdNjSeUUnT7T9UCgkAqAKnmGDP9y','Festival Semarak Padang','Pameran','Festival tahunan dengan karnaval topeng.')" class="gallery-item block relative w-full rounded-xl overflow-hidden shadow-sm group" data-category="pameran"><img class="w-full h-72 object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCto_B097-1x-yi9I3LQMYtmNo4VTs8YHUPKPMtHhCe7XGY7fhetEY7LJo_4F30WwWPat2233t8S-t4xW-sho0_lD3yZyyZd7aKIHsWLaf_26q8W4a5J_f-zgt-6RQq8qV7dRt9cSXvjW3LSkBreZceVnyUb7V_RVgKZEDk_rKHBWqvXGe3i9F3MOt2nLk9l4W0A8N3nykI3jK2A9wQj9MP-6ayNRRxBK3n9ggeut4rnp_EeyXSPcOmS6MjQme09ZXhpRLCla3WeRS9lXlwY6PARiliFwepEpdBkOspoqYAjlijFnn-vsNOh5-A4PHeHdleSgxIt2BdNjSeUUnT7T9UCgkAqAKnmGDP9y" alt="Festival Semarak Padang" loading="lazy"/><div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div><span class="absolute bottom-3 left-3 text-white font-label-md">Festival Semarak Padang</span></button></div><div id="lightbox-modal" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-md items-center justify-center p-4" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Tampilan besar foto galeri"><button data-lightbox-close aria-label="Tutup tampilan besar" class="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors"><span class="material-symbols-outlined text-[24px]">close</span></button><img id="lightbox-img" src="" alt="" class="max-w-full max-h-[80vh] rounded-xl shadow-2xl object-contain"/><div class="absolute bottom-6 left-0 w-full text-center px-4"><h3 id="lightbox-title" class="font-headline-md text-headline-md text-white"></h3><p id="lightbox-category" class="font-label-sm text-label-sm text-white/80"></p><p id="lightbox-desc" class="font-body-sm text-body-sm text-white/70"></p></div></div></div></section>`,
+  `<section class="w-full bg-surface py-space-xl lg:py-24" id="galeri"><div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin"><div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-space-md mb-space-lg"><div><div class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-primary mb-space-xs">Facebook Anang Prasetyo</div><h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Goresan &amp; Momen Ceria</h2><p class="font-body-md text-body-md text-on-surface-variant mt-space-xs max-w-xl">Postingan terbaru tentang kegiatan dan cerita KOMPAN, langsung dari profil Anang Prasetyo.</p></div><a href="https://www.facebook.com/anang.prasetyo.967" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-full bg-primary-container text-on-primary px-5 py-3 font-label-md text-label-md">Lihat profil Facebook <span aria-hidden="true">↗</span></a></div><div data-facebook-feed class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-md" aria-live="polite"><p class="text-on-surface-variant">Memuat postingan terbaru…</p></div></div><script src="./assets/js/facebook-feed.js" defer></script></section>`,
 );
 
 makeStaticPage(

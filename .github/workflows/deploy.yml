@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
 
 permissions:
   contents: read
@@ -20,6 +22,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Configure public Supabase client
+        env:
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: node scripts/write-supabase-public-config.js
+
+      - name: Fetch latest Facebook posts
+        env:
+          FACEBOOK_USER_ACCESS_TOKEN: ${{ secrets.FACEBOOK_USER_ACCESS_TOKEN }}
+        continue-on-error: true
+        run: node scripts/fetch-facebook-feed.js
+
       - name: Build site (zero npm dependencies)
         run: node scripts/build.js
 
@@ -33,6 +46,9 @@ jobs:
           rsync -a --prune-empty-dirs \
             --exclude '.git' \
             --exclude '.github' \
+            --exclude 'supabase' \
+            --exclude '.env*' \
+            --exclude '**/.env*' \
             --exclude 'content' \
             --exclude 'scripts' \
             --exclude 'server' \

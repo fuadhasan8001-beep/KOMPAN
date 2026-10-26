@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: blob: data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co;"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Dashboard Admin — KOMPAN</title>
+    <link rel="icon" href="../favicon.svg" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" />
+    <style>
+      :root { color-scheme: light; --green: #044335; --green-soft: #eaf4eb; --ink: #18231d; --muted: #5f6b63; --line: #d5dfd7; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; background: #f2fcf2; color: var(--ink); font: 16px/1.55 "Plus Jakarta Sans", sans-serif; }
+      header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem clamp(1rem, 5vw, 4rem); background: #fff; box-shadow: 0 1px 10px #15231a12; }
+      header a { color: var(--green); font-weight: 700; text-decoration: none; }
+      header strong { font: 800 1.2rem Epilogue, sans-serif; letter-spacing: .02em; }
+      main { width: min(100% - 2rem, 1000px); margin: 2.5rem auto; }
+      .panel { background: #fff; border: 1px solid #e2eae3; border-radius: 20px; padding: clamp(1.25rem, 4vw, 2.5rem); box-shadow: 0 12px 36px #1d39230d; }
+      h1, h2 { font-family: Epilogue, sans-serif; line-height: 1.2; }
+      h1 { margin: .2rem 0 .75rem; font-size: clamp(1.7rem, 4vw, 2.5rem); }
+      h2 { font-size: 1.3rem; }
+      .muted { color: var(--muted); }
+      .eyebrow { color: var(--green); font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+      .field { display: grid; gap: .45rem; margin: 1rem 0; }
+      label { font-size: .9rem; font-weight: 700; }
+      input, textarea { width: 100%; padding: .85rem 1rem; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: #fff; font: inherit; }
+      textarea { min-height: 280px; resize: vertical; }
+      input:focus, textarea:focus { outline: 3px solid #04433522; border-color: var(--green); }
+      button, .button { display: inline-flex; justify-content: center; align-items: center; gap: .5rem; padding: .85rem 1.2rem; border: 0; border-radius: 999px; background: var(--green); color: white; font: 700 .95rem "Plus Jakarta Sans", sans-serif; text-decoration: none; cursor: pointer; }
+      button:disabled { opacity: .55; cursor: wait; }
+      .button.secondary { padding: .6rem 1rem; background: var(--green-soft); color: var(--green); }
+      .row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+      #image-preview img { display: block; max-width: min(100%, 420px); max-height: 260px; margin-top: .75rem; border-radius: 12px; object-fit: cover; }
+      .notice { margin: 1rem 0; padding: .85rem 1rem; border-radius: 12px; background: var(--green-soft); color: var(--green); }
+      .notice.error { background: #fff0ef; color: #9c2521; }
+      [hidden] { display: none !important; }
+      #admin-recent-articles { display: grid; gap: .65rem; padding: 0; list-style: none; }
+      #admin-recent-articles li { display: flex; justify-content: space-between; gap: 1rem; padding: .75rem 0; border-bottom: 1px solid #edf1ed; }
+      #admin-recent-articles small { color: var(--muted); white-space: nowrap; }
+      @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } #admin-recent-articles li { flex-direction: column; gap: .2rem; } }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase-config.js"></script>
+    <script src="../assets/js/admin-dashboard.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <strong>KOMPAN <span class="muted">/ Admin</span></strong>
+      <a href="../artikel/">Lihat Artikel ↗</a>
+    </header>
+    <main>
+      <section id="admin-login-view" class="panel">
+        <p class="eyebrow">Ruang pengelola</p>
+        <h1>Masuk ke Dashboard Admin</h1>
+        <p class="muted">Gunakan akun yang memiliki role admin untuk mengelola artikel KOMPAN.</p>
+        <p id="login-message" class="notice" role="status" aria-live="polite" hidden></p>
+        <form id="admin-login-form">
+          <div class="field"><label for="email">Email admin</label><input id="email" name="email" type="email" autocomplete="username" required /></div>
+          <div class="field"><label for="password">Kata sandi</label><input id="password" name="password" type="password" autocomplete="current-password" required /></div>
+          <button type="submit">Masuk</button>
+        </form>
+      </section>
+
+      <section id="admin-dashboard-view" class="panel" hidden>
+        <div class="row">
+          <div><p class="eyebrow">Dashboard Admin</p><h1>Kelola Artikel</h1><p id="admin-account" class="muted"></p></div>
+          <button id="admin-signout" class="button secondary" type="button">Keluar</button>
+        </div>
+        <p id="admin-message" class="notice" role="status" aria-live="polite" hidden></p>
+        <form id="admin-article-form">
+          <div class="field"><label for="article-title">Judul artikel</label><input id="article-title" name="title" maxlength="160" required placeholder="Contoh: Menggambar Memori Bahagia di Candi Sanggrahan" /></div>
+          <div class="grid">
+            <div class="field"><label for="article-category">Kategori</label><input id="article-category" name="category" maxlength="60" placeholder="Kegiatan KOMPAN" /></div>
+            <div class="field"><label for="article-image">Gambar utama (JPG, PNG, WebP · maks. 5 MB)</label><input id="article-image" name="image" type="file" accept="image/jpeg,image/png,image/webp" required /><div id="image-preview"></div></div>
+          </div>
+          <div class="field"><label for="article-content">Isi artikel</label><textarea id="article-content" name="content" required placeholder="Tulis isi artikel di sini. Pisahkan paragraf dengan baris kosong."></textarea></div>
+          <button type="submit">Terbitkan artikel</button>
+        </form>
+        <div class="notice" style="margin-top:2rem">
+          <h2>Artikel terbaru</h2>
+          <ul id="admin-recent-articles"><li>Memuat artikel…</li></ul>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

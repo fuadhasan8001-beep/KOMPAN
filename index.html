@@ -29,7 +29,7 @@
     />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://wdg.fouita.com https://cdn.fouita.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.fouita.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self' https://*.fouita.com;"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://wdg.fouita.com https://cdn.fouita.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.fouita.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self' https://*.fouita.com https://*.supabase.co wss://*.supabase.co;"
     />
     <link
       href="favicon.svg"
@@ -1184,337 +1184,29 @@
                 </div>
               </div>
             </div>
+          <section class="mt-space-xl" aria-labelledby="latest-articles-heading" data-live-articles-section hidden>
+            <h3 id="latest-articles-heading" class="font-headline-md text-headline-md text-on-surface mb-space-md">Artikel terbaru dari KOMPAN</h3>
+            <div data-live-articles data-detail-base="artikel/baca.html" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md" aria-live="polite"></div>
+          </section>
           </div>
         </section>
-        <!-- GALERI DOKUMENTASI & INTERAKTIF LIGHTBOX -->
-        <section
-          class="w-full bg-surface py-space-xl lg:py-24"
-          id="galeri"
-        >
+        <!-- FACEBOOK FEED: postingan terbaru akun Anang -->
+        <section class="w-full bg-surface py-space-xl lg:py-24" id="galeri">
           <div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin">
-            <!-- Section Header -->
-            <div
-              class="flex flex-col items-center text-center max-w-2xl mx-auto mb-space-lg"
-            >
-              <div
-                class="inline-flex items-center gap-1.5 text-primary font-label-sm text-label-sm font-bold uppercase tracking-wider mb-space-xs"
-              >
-                <span class="material-symbols-outlined text-[16px]"
-                  >collections</span
-                >
-                <span>GALERI DOKUMENTASI</span>
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-space-md mb-space-lg">
+              <div>
+                <div class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-primary mb-space-xs">Facebook Anang Prasetyo</div>
+                <h2 class="font-headline-lg-mobile lg:font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-on-surface tracking-tight">Goresan &amp; Momen Ceria</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant mt-space-xs max-w-xl">Postingan terbaru tentang kegiatan dan cerita KOMPAN, langsung dari profil Anang Prasetyo.</p>
               </div>
-              <h2
-                class="font-headline-lg-mobile lg:font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-on-surface tracking-tight"
-              >
-                Goresan &amp; Momen Ceria
-              </h2>
-              <p
-                class="font-body-md text-body-md text-on-surface-variant mt-space-xs"
-              >
-                Kumpulan momen autentik, tawa murni, dan ekspresi warna-warni
-                yang terekam dalam setiap helatan Komunitas Padhang Njingglang.
-              </p>
-              <!-- Category Filters -->
-              <div
-                class="flex flex-wrap items-center justify-center gap-2 mt-space-md"
-                id="gallery-filters"
-              >
-                <button
-                  class="gallery-tab active font-label-md text-label-md px-4 py-2 rounded-full bg-primary-container text-on-primary transition-all shadow-sm"
-                  onclick="filterGallery('all', this)"
-                >
-                  Semua
-                </button>
-                <button
-                  class="gallery-tab font-label-md text-label-md px-4 py-2 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all"
-                  onclick="filterGallery('festival', this)"
-                >
-                  Festival Seni
-                </button>
-                <button
-                  class="gallery-tab font-label-md text-label-md px-4 py-2 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all"
-                  onclick="filterGallery('melukis', this)"
-                >
-                  Aktivitas Melukis
-                </button>
-                <button
-                  class="gallery-tab font-label-md text-label-md px-4 py-2 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all"
-                  onclick="filterGallery('literasi', this)"
-                >
-                  Literasi Anak
-                </button>
-                <button
-                  class="gallery-tab font-label-md text-label-md px-4 py-2 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all"
-                  onclick="filterGallery('guyub', this)"
-                >
-                  Dokumentasi Guyub
-                </button>
-              </div>
+              <a href="https://www.facebook.com/anang.prasetyo.967" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-full bg-primary-container text-on-primary px-5 py-3 font-label-md text-label-md">Lihat profil Facebook <span aria-hidden="true">↗</span></a>
             </div>
-            <!-- Masonry-Style Responsive Editorial Gallery Grid -->
-            <div
-              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-md"
-              id="gallery-grid"
-            >
-              <!-- Item 1: Festival (Poster / Art fest) -->
-              <div
-                class="gallery-item festival group relative rounded-xl overflow-hidden bg-surface-container shadow-sm cursor-pointer h-72 sm:h-80"
-                onclick="openLightbox('placeholder', 'Pameran Tahunan ART FEST KOMPAN', 'Festival Seni', 'Dokumentasi instalasi pameran seni rupa anak yang memajang ragam karya ekspresi bebas di ruang publik Yogyakarta.')"
-              >
-                <img
-                  loading="lazy"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  alt="Official curated documentation of KOMPAN Padhang Njingglang art exhibition, children drawings on light exhibition panels with handcrafted paper signage, warm gallery lights."
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCY-Bw5_XLivatFhq7TXIMhUSpayNeRSMRh-gU-CitE05kVSWvf0Mllh645ribUfH9G0GTYZPofSuG0sLqoVo9tfctBD9E-8Oh6NKQKx5eN6mT3snnHtSGh3IVuCgMxKKdiYMW7omrMqboPqgtLm1HUtSu3UFz2OOU5qYvug7Adloq-IhXMAZv6MCIdq-p3T5158l3jKhmBuoLG-HQqlh0qt7PyF86E43mLqo4PmLIqRRx-DXQAQJSP"
-                />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-space-md text-white"
-                >
-                  <span
-                    class="font-label-sm text-label-sm bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full self-start mb-1"
-                    >Festival Seni</span
-                  >
-                  <h4 class="font-headline-sm text-headline-sm font-semibold">
-                    Pameran Tahunan ART FEST
-                  </h4>
-                  <p class="font-body-sm text-body-sm text-white/90">
-                    Klik untuk melihat detail momen →
-                  </p>
-                </div>
-                <div
-                  class="absolute top-3 right-3 bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-primary opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <span class="material-symbols-outlined text-[18px]"
-                    >zoom_in</span
-                  >
-                </div>
-              </div>
-              <!-- Item 2: Aktivitas Melukis (Outdoor) -->
-              <div
-                class="gallery-item melukis group relative rounded-xl overflow-hidden bg-surface-container shadow-sm cursor-pointer h-72 sm:h-80"
-                onclick="openLightbox('placeholder', 'Melukis Bersama di Alam Bebas', 'Aktivitas Melukis', 'Anak-anak mengeksplorasi cat air di atas kertas tebal di bawah rindang pepohonan desa.')"
-              >
-                <img
-                  loading="lazy"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  alt="Joyful children sitting cross-legged on woven straw mats under shade of trees, painting vivid green and yellow leaves with watercolors, genuine happy smiles."
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2txIpx5LbFeSOHfIZ0ifY_bK7edUa48vX1Aj5GDlLYpV3P0EvI1nEUDjmTVb3CAtKswZ7ZMTSWDCeoBkaAuAlT0N7OxmCsZ8Ufs6y28Os5z8PObVvQ7Ymj4QlNjb9z_Frv6pqFzpJgezmPurHj7Y1qNQlaGFCSCL6UWaWpQuIlrGN6wVU3CcJwjKAZF944ai06RZ7VeTErr1QiSrTgerZVddMRUjeXqpQUoLVuPi1T3xGJ9cTtb9u"
-                />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-space-md text-white"
-                >
-                  <span
-                    class="font-label-sm text-label-sm bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded-full self-start mb-1"
-                    >Aktivitas Melukis</span
-                  >
-                  <h4 class="font-headline-sm text-headline-sm font-semibold">
-                    Melukis Bersama di Alam Terbuka
-                  </h4>
-                  <p class="font-body-sm text-body-sm text-white/90">
-                    Mengenal warna lewat eksplorasi alam sekitar.
-                  </p>
-                </div>
-                <div
-                  class="absolute top-3 right-3 bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-primary opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <span class="material-symbols-outlined text-[18px]"
-                    >zoom_in</span
-                  >
-                </div>
-              </div>
-              <!-- Item 3: Literasi Anak (Bercerita & Semesta Buku) -->
-              <div
-                class="gallery-item literasi group relative rounded-xl overflow-hidden bg-surface-container shadow-sm cursor-pointer h-72 sm:h-80"
-                onclick="openLightbox('placeholder', 'Pojok Baca &amp; Semesta Buku Anak', 'Literasi Anak', 'Lesehan santai membaca dongeng bergambar dan membedah karakter dongeng rakyat bersama.')"
-              >
-                <img
-                  loading="lazy"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  alt="Cozy reading corner filled with children sitting happily around low wooden tables filled with colorful Indonesian picture books, soft ambient lamp."
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1kylaUSqErU4oo-e9JN-TCmNikJWV-cwKyC8eNjo1oSItdP312BXT-Kb7MbXKegiCg0lvf92qksXeVbj0zGv6jXyf-uGRjmRZ7cD7eAC90LqmrHSZof9m8-y7EdpVAdaIDOJilyoR73ziV6dBiUPkpD2eDLKCaG__18M5FM9M529B0dPge8spXxvcO_ZGWL_jjOfkvLo655TVVu74ABB7VFaMcwgZ4yxMKaZK6f135-c4lbtAbOcb"
-                />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-space-md text-white"
-                >
-                  <span
-                    class="font-label-sm text-label-sm bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full self-start mb-1"
-                    >Literasi Anak</span
-                  >
-                  <h4 class="font-headline-sm text-headline-sm font-semibold">
-                    Pojok Baca &amp; Dongeng Ceria
-                  </h4>
-                  <p class="font-body-sm text-body-sm text-white/90">
-                    Menyalakan imajinasi lewat baris-baris dongeng.
-                  </p>
-                </div>
-                <div
-                  class="absolute top-3 right-3 bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-primary opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <span class="material-symbols-outlined text-[18px]"
-                    >zoom_in</span
-                  >
-                </div>
-              </div>
-              <!-- Item 4: Aktivitas Melukis (Poster Anak & Mural) -->
-              <div
-                class="gallery-item melukis group relative rounded-xl overflow-hidden bg-surface-container shadow-sm cursor-pointer h-72 sm:h-80"
-                onclick="openLightbox('placeholder', 'Mural Bersama Matahari Padhang Njingglang', 'Aktivitas Melukis', 'Goresan kolaboratif anak-anak melukis simbol matahari khas KOMPAN dengan nuansa kuning jingga menyala.')"
-              >
-                <img
-                  loading="lazy"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  alt="Close up of a vibrant wall mural created by children depicting smiling sun with golden rays, leafy green vines, and handwritten Padhang Njingglang lettering, vivid artistic texture."
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqrVFqMdCBX_2CGkFL5ZDCJ7ZIxk_dhtFYd-bgLwCeUVh1w17Rk8aJDd-r1Gmst_GyqYcATBpWFnzNB294GUw2XYi_Y5W8z7YPTqMqiPJpN2jLB-PPZuZk3e8aUOb-T4Nqgsl9JLrsRfCXv7iPTYwKY2EVy-k_te6eqUKTLNTZPdKYg8_1CNzGrQsfW1OdloyBX46tkRnx_tqzA2LvUUq4r4PiebX6P7LvsF0drvf36s09-sh7LB_c"
-                />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-space-md text-white"
-                >
-                  <span
-                    class="font-label-sm text-label-sm bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded-full self-start mb-1"
-                    >Aktivitas Melukis</span
-                  >
-                  <h4 class="font-headline-sm text-headline-sm font-semibold">
-                    Mural Matahari Semesta
-                  </h4>
-                  <p class="font-body-sm text-body-sm text-white/90">
-                    Simbol kehangatan dan asa anak-anak.
-                  </p>
-                </div>
-                <div
-                  class="absolute top-3 right-3 bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-primary opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <span class="material-symbols-outlined text-[18px]"
-                    >zoom_in</span
-                  >
-                </div>
-              </div>
-              <!-- Item 5: Dokumentasi Guyub (Interaksi Hangat Relawan & Warga) -->
-              <div
-                class="gallery-item guyub group relative rounded-xl overflow-hidden bg-surface-container shadow-sm cursor-pointer h-72 sm:h-80"
-                onclick="openLightbox('placeholder', 'Kehangatan Relawan &amp; Anak-Anak', 'Dokumentasi Guyub', 'Momen santai berbagi susu hangat, camilan tradisional, dan canda tawa di sela lokakarya.')"
-              >
-                <img
-                  loading="lazy"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  alt="Heartwarming documentary moment of an adult mentor laughing together with two young children holding their finished pastel drawings, authentic Indonesian neighborhood setting."
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2NUOV6xEQRGoAcDOOdcT6fMiXo7tGQzNLzegw-hyYqvhYKBEWp3AJDZ-VhULYfFWj0YGFFTMICaOq1UCvNPfYcLqjHr6Slfr745PZBU-5Rdq6dYmvnevW_qG9jUzIgMryXXZLnzg_W7cQmrYPGcRLR4jrkl-ABqOM2fS1PeE_l1buRuXb2hC-pxhvnoRwzWpl_jflUHFI_m1yh1gck1UFHvVZMUEpfNljcTZ891-8zpBSuD80mL4w"
-                />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-space-md text-white"
-                >
-                  <span
-                    class="font-label-sm text-label-sm bg-surface-container text-on-surface px-2 py-0.5 rounded-full self-start mb-1"
-                    >Dokumentasi Guyub</span
-                  >
-                  <h4 class="font-headline-sm text-headline-sm font-semibold">
-                    Tawa Hangat Para Sahabat
-                  </h4>
-                  <p class="font-body-sm text-body-sm text-white/90">
-                    Ruang tanpa sekat usia dan latar belakang.
-                  </p>
-                </div>
-                <div
-                  class="absolute top-3 right-3 bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-primary opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <span class="material-symbols-outlined text-[18px]"
-                    >zoom_in</span
-                  >
-                </div>
-              </div>
-              <!-- Item 6: Festival (Pesta Seni Panggung Rakyat) -->
-              <div
-                class="gallery-item festival group relative rounded-xl overflow-hidden bg-surface-container shadow-sm cursor-pointer h-72 sm:h-80"
-                onclick="openLightbox('placeholder', 'Panggung Ceria Padhang Njingglang', 'Festival Seni', 'Pertunjukan musik angklung sederhana, dongeng boneka tangan, dan apresiasi karya di ruang pendopo.')"
-              >
-                <img
-                  loading="lazy"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  alt="Traditional open joglo wooden pavilion filled with audience watching children perform simple puppet play with hand puppets, glowing paper lantern decorations, joyous atmosphere."
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdS1Dx4C0EKVdYX-KuGCqLhimAxh5gsX0-uGiQEZXIasVFIGYl7_3ZcFPiywTV67I_2Ga5GARLIQ-YYODFgXHxS1wiyiU3SOKGxA9HTt_m7ab2P_UPpXhirwlcpqv6M2gAkKU1xmG7V4_nn_BlC32S9Oe0Ht_uK26yyuqgVRtTtEwIuSAPFY1fSjzrlElyvmVacAOoIV_f-FQiI6R57w4CS7453sw4pyEdtN4Kcij4isQ_uJVaeeAA"
-                />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-space-md text-white"
-                >
-                  <span
-                    class="font-label-sm text-label-sm bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full self-start mb-1"
-                    >Festival Seni</span
-                  >
-                  <h4 class="font-headline-sm text-headline-sm font-semibold">
-                    Panggung Dongeng Anak
-                  </h4>
-                  <p class="font-body-sm text-body-sm text-white/90">
-                    Berani berekspresi di depan teman-teman.
-                  </p>
-                </div>
-                <div
-                  class="absolute top-3 right-3 bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-primary opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <span class="material-symbols-outlined text-[18px]"
-                    >zoom_in</span
-                  >
-                </div>
-              </div>
+            <div data-facebook-feed class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-md" aria-live="polite">
+              <p class="text-on-surface-variant">Memuat postingan terbaru…</p>
             </div>
           </div>
+          <script src="assets/js/facebook-feed.js" defer></script>
         </section>
-        <!-- LIGHTBOX MODAL (Pure Vanilla JS Implementation) -->
-        <div
-          class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4"
-          id="lightbox-modal"
-        >
-          <div
-            class="relative max-w-4xl w-full bg-surface-container-lowest rounded-xl overflow-hidden shadow-2xl flex flex-col md:flex-row"
-          >
-            <!-- Close Button -->
-            <button
-              class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-surface/90 hover:bg-surface text-on-surface flex items-center justify-center shadow-md transition-colors"
-              onclick="closeLightbox()"
-            >
-              <span class="material-symbols-outlined text-[20px]">close</span>
-            </button>
-            <!-- Lightbox Image View -->
-            <div
-              class="md:w-3/5 h-80 md:h-[480px] bg-black flex items-center justify-center"
-            >
-              <img
-                loading="lazy"
-                class="w-full h-full object-contain"
-                alt="Expanded view of children artwork and community activity documentation"
-                id="lightbox-img"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPdXV6mo6B7aHW4i4Y2C9w_8tmhQcy6JJ7larxOgTluS08JzRwSJoYTmLusxEuxnFFknfTkUD6O5vyluT8qGa4zpuofiMbTGB5mgsxD75UuxxGiw18qMDeQoLw1SNCK73vIKSy1Ns2MYnnpZ-9KCdXEmEBT8szyQc3kor59FJcqdHzjIoSD630h_alPMUTh5j4T76tS5wnelAGd_66m3n0_vDtvL3Hewl058uWk4g2JSrs5tPqO_nQ"
-              />
-            </div>
-            <!-- Lightbox Meta Info -->
-            <div
-              class="md:w-2/5 p-space-lg sm:p-space-xl flex flex-col justify-between bg-surface-container-lowest"
-            >
-              <div class="flex flex-col gap-space-sm">
-                <span
-                  class="font-label-sm text-label-sm bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full self-start font-bold uppercase"
-                  id="lightbox-category"
-                ></span>
-                <h3
-                  class="font-headline-md text-headline-md text-primary font-semibold leading-snug"
-                  id="lightbox-title"
-                ></h3>
-                <p
-                  class="font-body-md text-body-md text-on-surface-variant leading-relaxed"
-                  id="lightbox-desc"
-                ></p>
-              </div>
-              <div
-                class="pt-space-md flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm border-t border-transparent"
-              >
-                <span
-                  class="material-symbols-outlined text-[18px] text-tertiary"
-                  >photo_camera</span
-                >
-                <span>Dokumentasi Resmi Padhang Njingglang</span>
-              </div>
-            </div>
-          </div>
-        </div>
         <!-- INSTAGRAM FEED SECTION (Widget Fouita - Carousel Instagram Feed) -->
         <section
           class="w-full bg-surface-container-lowest py-space-xl lg:py-24 shadow-sm"
@@ -2194,6 +1886,9 @@
           </div>
         </section>
         <!-- CLIENT-SIDE VANILLA JAVASCRIPT FOR MICRO-INTERACTIONS -->
+        <script src="assets/js/supabase-config.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+        <script src="assets/js/articles-live.js" defer></script>
         <script
           src="assets/js/site.js"
           defer
