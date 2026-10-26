@@ -101,7 +101,7 @@ function buildFromMarkdown(dir, labelName, hrefPrefix) {
       : "";
   const articleScripts =
     hrefPrefix === "artikel"
-      ? `<script src="../assets/js/supabase-config.js" defer></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script><script src="../assets/js/articles-live.js" defer></script>`
+      ? `<script src="../assets/js/articles-live.js" defer></script>`
       : "";
 
   // Tombol filter kategori (hanya kategori yang benar-benar ada)
@@ -167,7 +167,7 @@ function buildFromMarkdown(dir, labelName, hrefPrefix) {
       depth: 1,
       body: liveDetailBody,
       activeNav: "artikel",
-      extraScripts: `<script src="../assets/js/supabase-config.js" defer></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script><script src="../assets/js/article-detail.js" defer></script>`,
+      extraScripts: `<script src="../assets/js/article-detail.js" defer></script>`,
     });
     write(path.join(ROOT, "artikel", "baca.html"), liveDetailPage);
   }

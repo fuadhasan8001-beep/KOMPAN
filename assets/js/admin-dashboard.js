@@ -1,9 +1,10 @@
 (() => {
-  const config = window.KOMPAN_SUPABASE_CONFIG || {};
   const loginView = document.getElementById("admin-login-view");
   const dashboardView = document.getElementById("admin-dashboard-view");
   const loginForm = document.getElementById("admin-login-form");
   const articleForm = document.getElementById("admin-article-form");
+  const articleIdInput = document.getElementById("article-id");
+  const imageInput = document.getElementById("article-image");
   const message = document.getElementById("admin-message");
   const loginMessage = document.getElementById("login-message");
 
@@ -13,224 +14,211 @@
     element.hidden = !text;
   };
 
-  if (!config.url || !config.anonKey) {
-    showMessage(
-      loginMessage,
-      "Publishable/anon key belum dikonfigurasi. Tambahkan GitHub Actions secret SUPABASE_ANON_KEY, lalu jalankan ulang workflow deploy.",
-      true,
-    );
-    loginForm.querySelectorAll("input, button").forEach((field) => {
-      field.disabled = true;
+  async function api(url, options = {}) {
+    const response = await fetch(url, {
+      credentials: "same-origin",
+      ...options,
+      headers: { "Content-Type": "application/json", ...(options.headers || {}) },
     });
-    return;
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(payload.error || "Permintaan gagal.");
+    return payload;
   }
 
-  if (!window.supabase?.createClient) {
-    showMessage(loginMessage, "Library Supabase gagal dimuat. Muat ulang halaman atau periksa koneksi.", true);
-    return;
-  }
-
-  const client = window.supabase.createClient(config.url, config.anonKey);
-  let signedInUser = null;
-
-  function setSignedIn(isAdmin) {
-    loginView.hidden = isAdmin;
-    dashboardView.hidden = !isAdmin;
-  }
-
-  async function checkAdmin(user) {
-    if (!user) {
-      signedInUser = null;
-      setSignedIn(false);
-      return;
+  function setSignedIn(user) {
+    const signedIn = Boolean(user?.authenticated && user.role === "admin");
+    loginView.hidden = signedIn;
+    dashboardView.hidden = !signedIn;
+    if (signedIn) {
+      document.getElementById("admin-account").textContent = user.email;
+      showMessage(loginMessage, "");
+      loadRecentArticles();
     }
-
-    const { data, error } = await client
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (error) {
-      setSignedIn(false);
-      showMessage(loginMessage, `Gagal memeriksa role admin: ${error.message}`, true);
-      return;
-    }
-    if (data?.role !== "admin") {
-      signedInUser = null;
-      setSignedIn(false);
-      await client.auth.signOut();
-      showMessage(loginMessage, "Akun ini belum memiliki role admin.", true);
-      return;
-    }
-
-    signedInUser = user;
-    setSignedIn(true);
-    document.getElementById("admin-account").textContent = user.email || "Admin KOMPAN";
-    showMessage(loginMessage, "");
-    await loadRecentArticles();
+    return signedIn;
   }
 
   async function loadRecentArticles() {
     const list = document.getElementById("admin-recent-articles");
     list.replaceChildren();
-    const { data, error } = await client
-      .from("articles")
-      .select("title, date, status")
-      .order("created_at", { ascending: false })
-      .limit(8);
-
-    if (error) {
+    try {
+      const { articles } = await api("/api/admin/articles");
+      if (!articles.length) {
+        list.textContent = "Belum ada artikel dari dashboard.";
+        return;
+      }
+      articles.forEach((article) => {
+        const row = document.createElement("li");
+        const info = document.createElement("span");
+        info.textContent = article.title;
+        const status = document.createElement("small");
+        status.textContent = `${article.status === "published" ? "Terbit" : "Draf"} · ${article.date || ""}`;
+        info.append(document.createElement("br"), status);
+        const actions = document.createElement("div");
+        actions.className = "article-actions";
+        const edit = document.createElement("button");
+        edit.type = "button";
+        edit.className = "button secondary";
+        edit.textContent = "Edit";
+        edit.addEventListener("click", () => beginEdit(article.id));
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "button secondary";
+        remove.textContent = "Hapus";
+        remove.addEventListener("click", () => deleteArticle(article));
+        actions.append(edit, remove);
+        row.append(info, actions);
+        list.append(row);
+      });
+    } catch {
       list.textContent = "Belum dapat memuat daftar artikel.";
-      return;
     }
-    if (!data?.length) {
-      list.textContent = "Belum ada artikel dari dashboard.";
-      return;
-    }
-
-    data.forEach((article) => {
-      const row = document.createElement("li");
-      const title = document.createElement("span");
-      title.textContent = article.title;
-      const status = document.createElement("small");
-      status.textContent = `${article.status === "published" ? "Terbit" : "Draf"} · ${article.date || ""}`;
-      row.append(title, status);
-      list.append(row);
-    });
   }
+
+  function resetArticleForm() {
+    articleForm.reset();
+    articleIdInput.value = "";
+    imageInput.required = true;
+    document.getElementById("article-form-heading").textContent = "Tulis artikel baru";
+    document.getElementById("article-submit").textContent = "Terbitkan artikel";
+    document.getElementById("article-cancel-edit").hidden = true;
+    document.getElementById("image-preview").replaceChildren();
+  }
+
+  async function beginEdit(id) {
+    showMessage(message, "Memuat artikel…");
+    try {
+      const { articles } = await api("/api/admin/articles");
+      const row = articles.find((item) => item.id === id);
+      if (!row) throw new Error("Artikel tidak ditemukan.");
+      const { article } = await api(`/api/articles?slug=${encodeURIComponent(row.slug)}`);
+      if (!article) throw new Error("Isi artikel tidak ditemukan.");
+      articleIdInput.value = article.id;
+      articleForm.elements.title.value = article.title;
+      articleForm.elements.category.value = article.category || "";
+      articleForm.elements.content.value = article.content || "";
+      imageInput.required = false;
+      const preview = document.getElementById("image-preview");
+      preview.replaceChildren();
+      if (article.image) {
+        const image = document.createElement("img");
+        image.src = article.image;
+        image.alt = "Gambar artikel saat ini";
+        preview.append(image);
+      }
+      document.getElementById("article-form-heading").textContent = "Edit artikel";
+      document.getElementById("article-submit").textContent = "Simpan perubahan";
+      document.getElementById("article-cancel-edit").hidden = false;
+      showMessage(message, "Ubah judul, kategori, isi, atau pilih gambar baru. Kosongkan gambar untuk mempertahankan gambar saat ini.");
+      articleForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (error) {
+      showMessage(message, error.message || "Artikel gagal dimuat.", true);
+    }
+  }
+
+  async function deleteArticle(article) {
+    if (!window.confirm(`Hapus artikel “${article.title}” secara permanen?`)) return;
+    try {
+      await api(`/api/admin/articles/${encodeURIComponent(article.id)}`, { method: "DELETE" });
+      if (articleIdInput.value === article.id) resetArticleForm();
+      showMessage(message, "Artikel dan gambar unggahannya sudah dihapus.");
+      await loadRecentArticles();
+    } catch (error) {
+      showMessage(message, error.message || "Artikel gagal dihapus.", true);
+    }
+  }
+
+  document.getElementById("article-cancel-edit").addEventListener("click", resetArticleForm);
 
   loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const button = loginForm.querySelector("button[type=submit]");
     button.disabled = true;
     showMessage(loginMessage, "Memeriksa akun…");
-
-    const form = new FormData(loginForm);
-    const { data, error } = await client.auth.signInWithPassword({
-      email: form.get("email").trim(),
-      password: form.get("password"),
-    });
-    button.disabled = false;
-    if (error) {
-      showMessage(loginMessage, "Email atau kata sandi tidak cocok.", true);
-      return;
+    const values = new FormData(loginForm);
+    try {
+      const user = await api("/api/admin/login", {
+        method: "POST",
+        body: JSON.stringify({ email: values.get("email"), password: values.get("password") }),
+      });
+      setSignedIn(user);
+    } catch (error) {
+      showMessage(loginMessage, error.message || "Email atau kata sandi tidak cocok.", true);
+    } finally {
+      button.disabled = false;
     }
-    await checkAdmin(data.user);
   });
 
   document.getElementById("admin-signout").addEventListener("click", async () => {
-    await client.auth.signOut();
-    await checkAdmin(null);
+    await api("/api/admin/logout", { method: "POST", body: "{}" }).catch(() => {});
+    dashboardView.hidden = true;
+    loginView.hidden = false;
+    loginForm.reset();
   });
 
-  const imageInput = document.getElementById("article-image");
   imageInput.addEventListener("change", () => {
     const file = imageInput.files?.[0];
     const preview = document.getElementById("image-preview");
     preview.replaceChildren();
     if (!file) return;
-    if (!file.type.startsWith("image/")) {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size > 5 * 1024 * 1024) {
       imageInput.value = "";
-      showMessage(message, "Pilih file gambar JPG, PNG, atau WebP.", true);
+      showMessage(message, "Pilih JPG, PNG, atau WebP maksimal 5 MB.", true);
       return;
     }
     const image = document.createElement("img");
     image.src = URL.createObjectURL(file);
     image.alt = "Pratinjau gambar artikel";
     preview.append(image);
+    showMessage(message, "");
   });
 
   articleForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!signedInUser) return;
-
     const button = articleForm.querySelector("button[type=submit]");
-    const form = new FormData(articleForm);
-    const title = form.get("title").trim();
-    const content = form.get("content").trim();
-    const file = form.get("image");
-    if (!file || !file.size) {
+    const values = new FormData(articleForm);
+    const file = values.get("image");
+    const isEditing = Boolean(articleIdInput.value);
+    if ((!file || !file.size) && !isEditing) {
       showMessage(message, "Pilih gambar utama artikel.", true);
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      showMessage(message, "Ukuran gambar maksimal 5 MB.", true);
-      return;
-    }
-    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
-      showMessage(message, "Format gambar yang didukung: JPG, PNG, dan WebP.", true);
-      return;
-    }
-    if (content.length < 30) {
-      showMessage(message, "Isi artikel minimal 30 karakter.", true);
       return;
     }
 
     button.disabled = true;
-    button.textContent = "Mengunggah artikel…";
-    showMessage(message, "Mengunggah gambar dan menyimpan artikel…");
-
-    const extension = file.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "");
-    const imagePath = `${signedInUser.id}/${crypto.randomUUID()}.${extension || "jpg"}`;
-    const { error: uploadError } = await client.storage
-      .from("kompan-media")
-      .upload(imagePath, file, {
-        cacheControl: "3600",
-        contentType: file.type,
-        upsert: false,
+    button.textContent = "Menyimpan artikel…";
+    showMessage(message, "Menyimpan artikel ke database lokal…");
+    try {
+      let imageData = "";
+      if (file?.size) {
+        imageData = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result).split(",", 2)[1] || "");
+          reader.onerror = () => reject(new Error("Gambar tidak dapat dibaca."));
+          reader.readAsDataURL(file);
+        });
+      }
+      const payload = {
+        title: values.get("title"),
+        category: values.get("category"),
+        content: values.get("content"),
+        imageMime: file?.type || "",
+        imageData,
+      };
+      await api(isEditing ? `/api/admin/articles/${encodeURIComponent(articleIdInput.value)}` : "/api/admin/articles", {
+        method: isEditing ? "PUT" : "POST",
+        body: JSON.stringify(payload),
       });
-
-    if (uploadError) {
-      showMessage(message, `Gambar gagal diunggah: ${uploadError.message}`, true);
+      resetArticleForm();
+      showMessage(message, isEditing ? "Perubahan artikel tersimpan." : "Artikel tersimpan di laptop dan tampil di Beranda serta halaman Artikel.");
+      await loadRecentArticles();
+    } catch (error) {
+      showMessage(message, error.message || "Artikel gagal disimpan.", true);
+    } finally {
       button.disabled = false;
-      button.textContent = "Terbitkan artikel";
-      return;
+      button.textContent = articleIdInput.value ? "Simpan perubahan" : "Terbitkan artikel";
     }
-
-    const { data: imageData } = client.storage
-      .from("kompan-media")
-      .getPublicUrl(imagePath);
-    const slugBase = title
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "")
-      .slice(0, 70);
-    const excerpt = content.replace(/\s+/g, " ").slice(0, 220);
-    const article = {
-      title,
-      slug: `${slugBase || "artikel"}-${crypto.randomUUID().slice(0, 8)}`,
-      excerpt,
-      content,
-      date: new Date().toISOString().slice(0, 10),
-      category: (form.get("category") || "Artikel").trim() || "Artikel",
-      author: signedInUser.user_metadata?.full_name || signedInUser.email || "KOMPAN",
-      image: imageData.publicUrl,
-      status: "published",
-      created_by: signedInUser.id,
-    };
-
-    const { error: insertError } = await client.from("articles").insert(article);
-    if (insertError) {
-      await client.storage.from("kompan-media").remove([imagePath]);
-      showMessage(message, `Artikel gagal disimpan: ${insertError.message}`, true);
-      button.disabled = false;
-      button.textContent = "Terbitkan artikel";
-      return;
-    }
-
-    articleForm.reset();
-    document.getElementById("image-preview").replaceChildren();
-    showMessage(message, "Artikel berhasil diterbitkan. Artikel tampil di halaman Artikel.");
-    button.disabled = false;
-    button.textContent = "Terbitkan artikel";
-    await loadRecentArticles();
   });
 
-  client.auth.getSession().then(({ data }) => checkAdmin(data.session?.user || null));
-  client.auth.onAuthStateChange((_event, session) => {
-    checkAdmin(session?.user || null);
-  });
+  api("/api/admin/session")
+    .then((user) => setSignedIn(user))
+    .catch(() => showMessage(loginMessage, "Server lokal belum berjalan. Jalankan python3 local_app.py serve.", true));
 })();

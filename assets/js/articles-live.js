@@ -2,19 +2,14 @@
   const containers = document.querySelectorAll("#live-article-grid, [data-live-articles]");
   if (!containers.length) return;
 
-  const config = window.KOMPAN_SUPABASE_CONFIG || {};
-  if (!config.anonKey || !window.supabase?.createClient) return;
-
-  const client = window.supabase.createClient(config.url, config.anonKey);
-  client
-    .from("articles")
-    .select("title, slug, excerpt, date, category, image")
-    .eq("status", "published")
-    .order("created_at", { ascending: false })
-    .limit(12)
-    .then(({ data, error }) => {
-      if (error || !data?.length) return;
-      data.forEach((article) => {
+  fetch("/api/articles?limit=12", { cache: "no-store" })
+    .then((response) => {
+      if (!response.ok) throw new Error("API lokal tidak tersedia");
+      return response.json();
+    })
+    .then(({ articles = [] }) => {
+      if (!articles.length) return;
+      articles.forEach((article) => {
         containers.forEach((container) => {
           const card = document.createElement("a");
           const detailBase = container.dataset.detailBase || "./baca.html";
@@ -52,5 +47,6 @@
       document.querySelectorAll("[data-live-articles-section]").forEach((section) => {
         section.hidden = false;
       });
-    });
+    })
+    .catch(() => {});
 })();

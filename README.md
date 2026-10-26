@@ -1,6 +1,6 @@
 # KOMPAN — Komunitas Padhang Njingglang
 
-Situs multi-halaman berbahasa Indonesia. Halaman publik tetap statis; Supabase menyediakan login admin, database artikel, dan penyimpanan gambar.
+Situs multi-halaman berbahasa Indonesia. Database artikel, role admin, dan unggahan gambar kini disimpan di SQLite pada laptop ini.
 
 ## Struktur halaman
 
@@ -16,16 +16,20 @@ Situs multi-halaman berbahasa Indonesia. Halaman publik tetap statis; Supabase m
 
 Konten artikel & kegiatan berasal dari Markdown (`content/`). Proses build (`node scripts/build.js`) menghasilkan halaman daftar dan detail, mengecualikan draft, memvalidasi slug unik, dan membuat URL relatif agar situs berfungsi baik pada domain custom maupun URL repository GitHub Pages.
 
-## Menjalankan secara lokal
+## Menjalankan situs dan database lokal
 
 ```bash
-node scripts/build.js   # bangun halaman dari Markdown
-python3 -m http.server 8080
-# atau
-npm run serve
+python3 local_app.py init
+python3 local_app.py serve
 ```
 
-Buka `http://localhost:8080/`.
+Buka `http://127.0.0.1:8080/`. Dashboard admin ada di `http://127.0.0.1:8080/admin/`. Database SQLite dan gambar unggahan tersimpan di `~/.local/share/kompan/`, di luar folder situs.
+
+Saat pertama kali dijalankan, data artikel dan kegiatan dari `content/` dimasukkan ke SQLite. Jika kredensial admin lama ada di file lokal `supabase/.env`, akun admin dibuat dengan kata sandi yang di-hash; file `.env` tidak dikirim ke website. Buat admin baru jika belum ada dengan `python3 local_app.py create-admin`. Atur ulang kata sandi dengan `python3 local_app.py reset-admin-password EMAIL`.
+
+Database lokal mencakup profil/role, artikel, kegiatan, media, komentar, pengaturan situs, sesi login, dan arsip baris dari migrasi Supabase. Login hanya admin; server hanya menerima koneksi dari laptop ini.
+
+Jika jaringan ke project Supabase tersedia kembali dan data remote perlu disalin, jalankan `python3 local_app.py migrate-supabase`. Perintah itu membuat salinan lokal tanpa menghapus atau mengubah database remote. Saat ini koneksi ke host Supabase belum berhasil, jadi migrasi otomatis mengambil konten lokal dari Markdown; baris remote yang belum terjangkau belum tersalin.
 
 ## Menguji tautan
 
@@ -51,15 +55,9 @@ Setelah secret tersedia, jalankan workflow **Build & Deploy KOMPAN** satu kali d
 
 ### Dashboard Admin Artikel
 
-Dashboard tersedia di `/admin/`. Admin dapat masuk, mengunggah gambar JPG/PNG/WebP hingga 5 MB, menulis judul dan isi artikel, lalu menerbitkannya. Artikel terbit langsung muncul di bagian artikel terbaru pada Beranda dan halaman `/artikel/`, serta memiliki halaman baca sendiri.
+Di dashboard, admin dapat mengunggah JPG/PNG/WebP hingga 5 MB, mengisi judul dan isi, lalu menerbitkan artikel. Artikel tersimpan di database SQLite lokal dan muncul di Beranda serta halaman Artikel saat situs dibuka melalui server lokal.
 
-Sebelum digunakan:
-
-1. Jalankan `supabase/admin-dashboard.sql` satu kali pada **Supabase Dashboard → SQL Editor**. SQL ini mengaktifkan role `admin`, kebijakan RLS, tabel artikel, dan bucket gambar. Di dalamnya, UID admin yang sudah ada di konfigurasi lokal dipromosikan menjadi admin; ubah UID tersebut jika akun admin yang dipakai berbeda.
-2. Tambahkan publishable/anon key Supabase sebagai repository secret `SUPABASE_ANON_KEY` pada **Settings → Secrets and variables → Actions**, lalu jalankan workflow **Build & Deploy KOMPAN**. Kunci ini memang dipakai di browser; akses tulis dibatasi oleh role admin dan RLS. Jangan gunakan `service_role` key.
-3. Masuk di `/admin/` memakai akun admin Supabase yang sudah dibuat. Pengguna tanpa role `admin` tidak dapat menerbitkan artikel atau mengunggah gambar.
-
-File `supabase/.env` tidak ikut dikirim ke GitHub Pages; workflow mengecualikan folder konfigurasi Supabase dan semua file `.env` dari artefak publikasi.
+GitHub Pages tetap menayangkan versi statis dan tidak dapat membaca database di laptop. Dashboard lokal tidak disertakan dalam artefak GitHub Pages.
 
 ## Catatan penting
 
