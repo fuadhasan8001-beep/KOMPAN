@@ -23,7 +23,7 @@ from http.cookies import SimpleCookie
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import parse_qs, unquote, urlsplit
+from urllib.parse import parse_qs, quote, unquote, urlsplit
 from urllib.request import Request, urlopen
 
 
@@ -142,6 +142,7 @@ def init_db() -> None:
             "site_name": "KOMPAN",
             "site_full_name": "Komunitas Padhang Njingglang",
             "database_mode": "local-sqlite",
+            "archive_visible": True,
         }
         for key, value in defaults.items():
             db.execute(
@@ -156,6 +157,20 @@ def init_db() -> None:
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def drive_file_id(link: str) -> str:
+    try:
+        parsed = urlsplit(link)
+    except ValueError:
+        return ""
+    if parsed.scheme != "https" or parsed.hostname not in {"drive.google.com", "docs.google.com"}:
+        return ""
+    match = re.search(r"/file/d/([A-Za-z0-9_-]+)", parsed.path)
+    if match:
+        return match.group(1)
+    candidate = (parse_qs(parsed.query).get("id") or [""])[0]
+    return candidate if re.fullmatch(r"[A-Za-z0-9_-]{10,}", candidate) else ""
 
 
 def parse_frontmatter(text: str) -> tuple[dict, str]:
@@ -431,6 +446,41 @@ class LocalHandler(SimpleHTTPRequestHandler):
         except Exception:
             self.send_json(500, {"error": "Permintaan gagal diproses."})
 
+    def do_PATCH(self):
+        if not self.check_same_origin():
+            self.send_json(403, {"error": "Permintaan lintas situs ditolak."})
+            return
+        route = urlsplit(self.path).path
+        if route != "/api/admin/settings":
+            self.send_json(404, {"error": "Rute API tidak ditemukan."})
+            return
+        if not self.require_admin():
+            self.send_json(401, {"error": "Login admin diperlukan."})
+            return
+        try:
+            payload = self.read_json(16_384)
+            if "archive_visible" in payload and not isinstance(payload["archive_visible"], bool):
+                raise ValueError("Nilai pengaturan arsip tidak valid.")
+            if "archive_images" in payload:
+                if not isinstance(payload["archive_images"], list) or len(payload["archive_images"]) > 6:
+                    raise ValueError("Masukkan maksimal 6 tautan gambar Google Drive.")
+                links = [str(link).strip() for link in payload["archive_images"]]
+                if any(link and not drive_file_id(link) for link in links):
+                    raise ValueError("Gunakan tautan file Google Drive yang dibagikan dengan akses siapa saja yang memiliki link.")
+            with connect_db() as db:
+                for key in ("archive_visible", "archive_images"):
+                    if key in payload:
+                        db.execute(
+                            "INSERT INTO site_settings(setting_key,value_json,updated_at) VALUES(?,?,?) "
+                            "ON CONFLICT(setting_key) DO UPDATE SET value_json=excluded.value_json,updated_at=excluded.updated_at",
+                            (key, json.dumps(payload[key]), utc_now()),
+                        )
+            self.send_json(200, payload)
+        except ValueError as error:
+            self.send_json(400, {"error": str(error)})
+        except Exception:
+            self.send_json(500, {"error": "Pengaturan gagal disimpan."})
+
     def do_PUT(self):
         if not self.check_same_origin():
             self.send_json(403, {"error": "Permintaan lintas situs ditolak."})
@@ -593,6 +643,14 @@ class LocalHandler(SimpleHTTPRequestHandler):
         return user if user and user["role"] == "admin" else None
 
     def handle_api_get(self, route: str, query: dict):
+        if route == "/api/site-settings":
+            with connect_db() as db:
+                rows = db.execute("SELECT setting_key,value_json FROM site_settings WHERE setting_key IN ('archive_visible','archive_images')").fetchall()
+            settings = {row["setting_key"]: json.loads(row["value_json"]) for row in rows}
+            links = settings.get("archive_images", [])
+            images = [f"https://drive.google.com/thumbnail?id={quote(file_id)}&sz=w640" if (file_id := drive_file_id(link)) else "" for link in links]
+            self.send_json(200, {"archive_visible": settings.get("archive_visible", True), "archive_images": images, "archive_image_links": links})
+            return
         if route == "/api/admin/session":
             user = self.session_user()
             if not user or user["role"] != "admin":

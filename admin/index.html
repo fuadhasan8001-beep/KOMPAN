@@ -30,6 +30,7 @@
       label { font-size: .9rem; font-weight: 700; }
       input, textarea { width: 100%; padding: .85rem 1rem; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: #fff; font: inherit; }
       textarea { min-height: 280px; resize: vertical; }
+      #archive-image-links { min-height: 150px; }
       input:focus, textarea:focus { outline: 3px solid #04433522; border-color: var(--green); }
       button, .button { display: inline-flex; justify-content: center; align-items: center; gap: .5rem; padding: .85rem 1.2rem; border: 0; border-radius: 999px; background: var(--green); color: white; font: 700 .95rem "Plus Jakarta Sans", sans-serif; text-decoration: none; cursor: pointer; }
       button:disabled { opacity: .55; cursor: wait; }
@@ -44,9 +45,12 @@
       #admin-recent-articles li { display: flex; justify-content: space-between; gap: 1rem; padding: .75rem 0; border-bottom: 1px solid #edf1ed; }
       #admin-recent-articles small { color: var(--muted); white-space: nowrap; }
       .article-actions { display: flex; gap: .5rem; flex-shrink: 0; }
+      .setting-toggle { display: flex; align-items: flex-start; gap: .75rem; margin: 0; padding: 1rem; border: 1px solid var(--line); border-radius: 12px; }
+      .setting-toggle input { width: 1.2rem; height: 1.2rem; margin: .15rem 0 0; accent-color: var(--green); }
+      .setting-toggle span { display: grid; gap: .2rem; }
       @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } #admin-recent-articles li { flex-direction: column; gap: .2rem; } }
     </style>
-    <script src="../assets/js/admin-dashboard.js?v=edit-delete-20261026" defer></script>
+    <script src="../assets/js/admin-dashboard.js?v=drive-archive-20261027" defer></script>
   </head>
   <body>
     <header>
@@ -72,6 +76,20 @@
           <button id="admin-signout" class="button secondary" type="button">Keluar</button>
         </div>
         <p id="admin-message" class="notice" role="status" aria-live="polite" hidden></p>
+        <section class="notice" aria-labelledby="site-settings-heading">
+          <h2 id="site-settings-heading">Pengaturan beranda</h2>
+          <label class="setting-toggle" for="archive-visible">
+            <input id="archive-visible" type="checkbox" checked />
+            <span><strong>Tampilkan Arsip Jejak Perjalanan</strong><small class="muted">Matikan untuk menyembunyikan bagian arsip dari beranda.</small></span>
+          </label>
+          <div class="field">
+            <label for="archive-image-links">Gambar arsip dari Google Drive (opsional)</label>
+            <textarea id="archive-image-links" placeholder="Satu tautan gambar per baris, urut sesuai arsip 2024, 2023, 2022, 2020–2021, 2015–2019, 2009–2014"></textarea>
+            <small class="muted">Gunakan tautan file gambar Drive, lalu atur akses umum menjadi “Siapa saja yang memiliki link — Viewer”. Baris kosong memakai gambar bawaan.</small>
+            <button id="save-archive-images" class="button secondary" type="button">Simpan gambar arsip</button>
+          </div>
+          <p id="settings-message" role="status" aria-live="polite" hidden></p>
+        </section>
         <form id="admin-article-form">
           <input id="article-id" type="hidden" />
           <h2 id="article-form-heading">Tulis artikel baru</h2>

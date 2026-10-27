@@ -7,6 +7,9 @@
   const imageInput = document.getElementById("article-image");
   const message = document.getElementById("admin-message");
   const loginMessage = document.getElementById("login-message");
+  const archiveVisibleInput = document.getElementById("archive-visible");
+  const archiveImageLinks = document.getElementById("archive-image-links");
+  const settingsMessage = document.getElementById("settings-message");
 
   const showMessage = (element, text, isError = false) => {
     element.textContent = text;
@@ -32,10 +35,59 @@
     if (signedIn) {
       document.getElementById("admin-account").textContent = user.email;
       showMessage(loginMessage, "");
+      loadSiteSettings();
       loadRecentArticles();
     }
     return signedIn;
   }
+
+  async function loadSiteSettings() {
+    try {
+      const settings = await api("/api/site-settings");
+      archiveVisibleInput.checked = settings.archive_visible !== false;
+      archiveImageLinks.value = (settings.archive_image_links || []).join("\n");
+    } catch {
+      showMessage(settingsMessage, "Pengaturan beranda gagal dimuat.", true);
+    }
+  }
+
+  archiveVisibleInput.addEventListener("change", async () => {
+    archiveVisibleInput.disabled = true;
+    showMessage(settingsMessage, "Menyimpan pengaturan…");
+    try {
+      const settings = await api("/api/admin/settings", {
+        method: "PATCH",
+        body: JSON.stringify({ archive_visible: archiveVisibleInput.checked }),
+      });
+      archiveVisibleInput.checked = settings.archive_visible;
+      showMessage(settingsMessage, settings.archive_visible
+        ? "Arsip Jejak Perjalanan ditampilkan di beranda."
+        : "Arsip Jejak Perjalanan disembunyikan dari beranda.");
+    } catch (error) {
+      archiveVisibleInput.checked = !archiveVisibleInput.checked;
+      showMessage(settingsMessage, error.message || "Pengaturan gagal disimpan.", true);
+    } finally {
+      archiveVisibleInput.disabled = false;
+    }
+  });
+
+  document.getElementById("save-archive-images").addEventListener("click", async (event) => {
+    const button = event.currentTarget;
+    const links = archiveImageLinks.value.split(/\r?\n/).slice(0, 6).map((link) => link.trim());
+    button.disabled = true;
+    showMessage(settingsMessage, "Menyimpan tautan gambar arsip…");
+    try {
+      await api("/api/admin/settings", {
+        method: "PATCH",
+        body: JSON.stringify({ archive_images: links }),
+      });
+      showMessage(settingsMessage, "Tautan Google Drive tersimpan. Muat ulang beranda untuk melihat gambar arsip.");
+    } catch (error) {
+      showMessage(settingsMessage, error.message || "Tautan gambar gagal disimpan.", true);
+    } finally {
+      button.disabled = false;
+    }
+  });
 
   async function loadRecentArticles() {
     const list = document.getElementById("admin-recent-articles");
