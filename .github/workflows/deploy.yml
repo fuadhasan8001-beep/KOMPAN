@@ -48,6 +48,7 @@ jobs:
             --exclude '**/.env*' \
             --exclude 'content' \
             --exclude 'scripts' \
+            --exclude 'google-apps-script' \
             --exclude 'server' \
             --exclude 'node_modules' \
             --exclude '_site' \

@@ -29,7 +29,7 @@
     />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://wdg.fouita.com https://cdn.fouita.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.fouita.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self' https://*.fouita.com;"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://wdg.fouita.com https://cdn.fouita.com https://connect.facebook.net https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.fouita.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self' https://*.fouita.com;"
     />
     <link
       href="favicon.svg"
@@ -1169,6 +1169,24 @@
             </div>
           </div>
         </section>
+        <!-- SOROTAN KEGIATAN: diisi dari Google Drive jika feed dikonfigurasi -->
+        <section
+          class="w-full bg-surface-container-low py-space-xl lg:py-24"
+          id="sorotan"
+          hidden
+        >
+          <div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin">
+            <div class="max-w-2xl mb-space-lg">
+              <div class="inline-flex items-center gap-1.5 text-primary font-label-sm text-label-sm font-bold uppercase tracking-wider mb-space-xs">
+                <span class="material-symbols-outlined text-[16px]">auto_awesome</span>
+                <span>CERITA PILIHAN</span>
+              </div>
+              <h2 class="font-headline-lg-mobile lg:font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-on-surface tracking-tight">Sorotan Kegiatan</h2>
+              <p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">Cerita, karya, dan momen pilihan dari perjalanan KOMPAN.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md" id="highlights-grid"></div>
+          </div>
+        </section>
         <!-- ARSIP KEGIATAN & JEJAK PERJALANAN (Timeline Grid) -->
         <section
           class="w-full bg-surface py-space-xl lg:py-24"
@@ -1617,6 +1635,8 @@
         </section>
         <!-- CLIENT-SIDE VANILLA JAVASCRIPT FOR MICRO-INTERACTIONS -->
         <script src="assets/js/articles-live.js" defer></script>
+        <script src="assets/js/google-content-config.js" defer></script>
+        <script src="assets/js/google-content.js" defer></script>
         <script src="assets/js/site-settings.js" defer></script>
         <script
           src="assets/js/site.js"

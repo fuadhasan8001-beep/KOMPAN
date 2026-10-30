@@ -1,0 +1,27 @@
+{
+  "archive": [
+    {
+      "id": "dokumentasi-kegiatan-kompan",
+      "tahun": "2024",
+      "judul": "Dokumentasi Kegiatan KOMPAN",
+      "deskripsi": "Foto dokumentasi kegiatan KOMPAN yang tersimpan di arsip Drive.",
+      "isi": "",
+      "tanggal": "2024",
+      "label": "Dokumentasi",
+      "gambar": "https://drive.google.com/file/d/13xhvI_ydQ-AGaFxz1WVfk8oKNSYnK3Vu/view?usp=drive_link",
+      "url": "",
+      "status": "terbit"
+    }
+  ],
+  "highlights": [
+    {
+      "id": "momen-kegiatan-kompan",
+      "judul": "Momen Kegiatan KOMPAN",
+      "deskripsi": "Salah satu momen kegiatan komunitas yang dibagikan untuk mengenang perjalanan KOMPAN.",
+      "isi": "",
+      "gambar": "https://drive.google.com/file/d/13xhvI_ydQ-AGaFxz1WVfk8oKNSYnK3Vu/view?usp=drive_link",
+      "url": "",
+      "status": "draft"
+    }
+  ]
+}
