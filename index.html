@@ -310,6 +310,11 @@
           >
           <a
             class="font-label-lg text-label-lg text-on-surface hover:text-primary transition-colors py-space-xs"
+            href="kontak.html"
+            >Kontak</a
+          >
+          <a
+            class="font-label-lg text-label-lg text-on-surface hover:text-primary transition-colors py-space-xs"
             href="artikel/"
             >Artikel</a
           >
@@ -339,6 +344,11 @@
             data-path="galeri"
             href="galeri.html"
             >Galeri</a
+          ><a
+            class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-space-xs px-space-sm"
+            data-path="kontak"
+            href="kontak.html"
+            >Kontak</a
           ><a
             class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-space-xs px-space-sm"
             data-path="artikel"
@@ -561,7 +571,8 @@
         </section>
         <!-- INSTAGRAM STORY HIGHLIGHTS STYLE ROW -->
         <section
-          class="w-full bg-surface-container-lowest py-space-lg shadow-sm"
+          class="w-full bg-surface-container-lowest py-space-lg shadow-sm hidden"
+          hidden
         >
           <div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin">
             <div
@@ -914,14 +925,14 @@
             </div>
           </div>
         </section>
-        <section class="w-full bg-surface-container-low py-space-xl lg:py-24" aria-labelledby="latest-articles-heading" data-live-articles-section hidden>
+        <section class="w-full bg-surface-container-low py-space-xl lg:py-24 hidden" aria-labelledby="latest-articles-heading" data-live-articles-section hidden>
           <div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin">
             <h2 id="latest-articles-heading" class="font-headline-md text-headline-md text-on-surface mb-space-md">Artikel terbaru dari KOMPAN</h2>
             <div data-live-articles data-detail-base="artikel/baca.html" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md" aria-live="polite"></div>
           </div>
         </section>
         <!-- FACEBOOK FEED: postingan terbaru akun Anang -->
-        <section class="w-full bg-surface py-space-xl lg:py-24" id="galeri">
+        <section class="w-full bg-surface py-space-xl lg:py-24 hidden" id="galeri" hidden>
           <div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin">
             <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-space-md mb-space-lg">
               <div>
@@ -1032,6 +1043,26 @@
                     Batu, Kediri, dan Blitar, sekaligus menggerakkan AMB
                     (Aktivasi Memori Bahagia).
                   </p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm pt-space-xs">
+                  <article class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm">
+                    <div class="flex items-center gap-2 text-primary mb-2">
+                      <span class="material-symbols-outlined text-[20px]" aria-hidden="true">visibility</span>
+                      <h3 class="font-label-lg text-label-lg font-bold">Visi</h3>
+                    </div>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Menjadi ruang tumbuh yang inklusif dan menyenangkan bagi anak untuk bermain, berkarya, dan mengembangkan potensi diri.</p>
+                  </article>
+                  <article class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm">
+                    <div class="flex items-center gap-2 text-primary mb-2">
+                      <span class="material-symbols-outlined text-[20px]" aria-hidden="true">flag</span>
+                      <h3 class="font-label-lg text-label-lg font-bold">Misi</h3>
+                    </div>
+                    <ul class="font-body-sm text-body-sm text-on-surface-variant list-disc pl-5 space-y-1">
+                      <li>Menghadirkan kegiatan bermain dan belajar yang kreatif, humanis, dan berakar pada budaya.</li>
+                      <li>Mendampingi tumbuh kembang anak melalui bermain, cerita, menyanyi, dan kreativitas.</li>
+                      <li>Mengajak relawan, keluarga, dan masyarakat membangun lingkungan yang ramah anak.</li>
+                    </ul>
+                  </article>
                 </div>
                 <!-- 4 Core Values Grid -->
                 <div
@@ -1189,8 +1220,9 @@
         </section>
         <!-- ARSIP KEGIATAN & JEJAK PERJALANAN (Timeline Grid) -->
         <section
-          class="w-full bg-surface py-space-xl lg:py-24"
+          class="w-full bg-surface py-space-xl lg:py-24 hidden"
           id="arsip"
+          hidden
         >
           <div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin">
             <!-- Section Title & Year Pills -->
@@ -1723,6 +1755,11 @@
                   href="galeri.html"
                   >Galeri Senyum</a
                 >
+              </li>
+              <li
+                class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors"
+              >
+                <a data-path="kontak" href="kontak.html">Kontak</a>
               </li>
               <li
                 class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors"
